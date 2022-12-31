@@ -1,19 +1,23 @@
 .post_thumb{
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     justify-content: center;
     grid-gap: 10px;
     overflow: hidden;
     margin: 15px 0;
+    
 }
 .post_thumb_display{
-    min-width: 300px;
-    height: 300px;
+    min-width: 200px;
+    height: 200px;
     width: 100%;
     position: relative;
     cursor: pointer;
     overflow: hidden;
+    text-align: center;
+    font-size: 20px;
+    padding-top: 90px;
 }
 .post_thumb_display img,
 .post_thumb_display video{

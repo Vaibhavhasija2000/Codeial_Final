@@ -1,5 +1,5 @@
 import { GLOBALTYPES } from './globalTypes'
-import { imageUpload } from '../../utils/imageUpload'
+//import { imageUpload } from '../../utils/imageUpload'
 import { postDataAPI, getDataAPI, patchDataAPI, deleteDataAPI } from '../../utils/fetchData'
 import { createNotify, removeNotify } from './notifyAction'
 
@@ -13,13 +13,13 @@ export const POST_TYPES = {
 }
 
 
-export const createPost = ({content, images, auth, socket}) => async (dispatch) => {
+export const createPost = ({content, auth, socket}) => async (dispatch) => {
     let media = []
     try {
         dispatch({ type: GLOBALTYPES.ALERT, payload: {loading: true} })
-        if(images.length > 0) media = await imageUpload(images)
+        //if(images.length > 0) media = await imageUpload(images)
 
-        const res = await postDataAPI('posts', { content, images: media }, auth.token)
+        const res = await postDataAPI('posts', { content }, auth.token)
 
         dispatch({ 
             type: POST_TYPES.CREATE_POST, 
@@ -35,7 +35,7 @@ export const createPost = ({content, images, auth, socket}) => async (dispatch) 
             recipients: res.data.newPost.user.followers,
             url: `/post/${res.data.newPost._id}`,
             content, 
-            image: media[0].url
+            //image: media[0].url
         }
 
         dispatch(createNotify({msg, auth, socket}))
@@ -67,22 +67,22 @@ export const getPosts = (token) => async (dispatch) => {
     }
 }
 
-export const updatePost = ({content, images, auth, status}) => async (dispatch) => {
+export const updatePost = ({content,  auth, status}) => async (dispatch) => {
     let media = []
-    const imgNewUrl = images.filter(img => !img.url)
-    const imgOldUrl = images.filter(img => img.url)
+    // const imgNewUrl = images.filter(img => !img.url)
+    // const imgOldUrl = images.filter(img => img.url)
 
-    if(status.content === content 
-        && imgNewUrl.length === 0
-        && imgOldUrl.length === status.images.length
-    ) return;
+    // if(status.content === content 
+    //     && imgNewUrl.length === 0
+    //     && imgOldUrl.length === status.images.length
+    // ) return;
 
     try {
         dispatch({ type: GLOBALTYPES.ALERT, payload: {loading: true} })
-        if(imgNewUrl.length > 0) media = await imageUpload(imgNewUrl)
+        //if(imgNewUrl.length > 0) media = await imageUpload(imgNewUrl)
 
         const res = await patchDataAPI(`post/${status._id}`, { 
-            content, images: [...imgOldUrl, ...media] 
+            content
         }, auth.token)
 
         dispatch({ type: POST_TYPES.UPDATE_POST, payload: res.data.newPost })
@@ -112,7 +112,7 @@ export const likePost = ({post, auth, socket}) => async (dispatch) => {
             recipients: [post.user._id],
             url: `/post/${post._id}`,
             content: post.content, 
-            image: post.images[0].url
+           // image: post.images[0].url
         }
 
         dispatch(createNotify({msg, auth, socket}))

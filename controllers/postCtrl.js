@@ -8,25 +8,25 @@ class APIfeatures {
         this.queryString = queryString;
     }
 
-    paginating(){
-        const page = this.queryString.page * 1 || 1
-        const limit = this.queryString.limit * 1 || 9
-        const skip = (page - 1) * limit
-        this.query = this.query.skip(skip).limit(limit)
-        return this;
-    }
+    // paginating(){
+    //     const page = this.queryString.page * 1 || 1
+    //     const limit = this.queryString.limit * 1 || 9
+    //     const skip = (page - 1) * limit
+    //     this.query = this.query.skip(skip).limit(limit)
+    //     return this;
+    // }
 }
 
 const postCtrl = {
     createPost: async (req, res) => {
         try {
-            const { content, images } = req.body
+            const { content } = req.body
 
-            if(images.length === 0)
-            return res.status(400).json({msg: "Please add your photo."})
+            // if(images.length === 0)
+            // return res.status(400).json({msg: "Please add your photo."})
 
             const newPost = new Posts({
-                content, images, user: req.user._id
+                content,  user: req.user._id
             })
             await newPost.save()
 
@@ -45,7 +45,8 @@ const postCtrl = {
         try {
             const features =  new APIfeatures(Posts.find({
                 user: [...req.user.following, req.user._id]
-            }), req.query).paginating()
+            }), req.query)
+            //.paginating()
 
             const posts = await features.query.sort('-createdAt')
             .populate("user likes", "avatar username fullname followers")
@@ -69,10 +70,10 @@ const postCtrl = {
     },
     updatePost: async (req, res) => {
         try {
-            const { content, images } = req.body
+            const { content } = req.body
 
             const post = await Posts.findOneAndUpdate({_id: req.params.id}, {
-                content, images
+                content
             }).populate("user likes", "avatar username fullname")
             .populate({
                 path: "comments",
@@ -86,7 +87,7 @@ const postCtrl = {
                 msg: "Updated Post!",
                 newPost: {
                     ...post._doc,
-                    content, images
+                    content
                 }
             })
         } catch (err) {
@@ -128,7 +129,7 @@ const postCtrl = {
     getUserPosts: async (req, res) => {
         try {
             const features = new APIfeatures(Posts.find({user: req.params.id}), req.query)
-            .paginating()
+            //.paginating()
             const posts = await features.query.sort("-createdAt")
 
             res.json({
@@ -236,7 +237,7 @@ const postCtrl = {
         try {
             const features = new APIfeatures(Posts.find({
                 _id: {$in: req.user.saved}
-            }), req.query).paginating()
+            }), req.query)//.paginating()
 
             const savePosts = await features.query.sort("-createdAt")
 
