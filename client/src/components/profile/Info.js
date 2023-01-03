@@ -5,6 +5,7 @@ import FollowBtn from '../FollowBtn'
 import Followers from './Followers'
 import Following from './Following'
 import { GLOBALTYPES } from '../../redux/actions/globalTypes'
+import Profile from '../../images/profile.png';
 
 const Info = ({id, auth, profile, dispatch}) => {
     const [userData, setUserData] = useState([])
@@ -37,7 +38,8 @@ const Info = ({id, auth, profile, dispatch}) => {
             {
                 userData.map(user => (
                     <div className="info_container" key={user._id}>
-                        <Avatar src={user.avatar} size="supper-avatar" />
+                        {/* <div style={{fontSize:'150px'}}><Avatar src={user.avatar} size="supper-avatar" /> </div> */}
+                        <img src = {Profile} width='100' height='100' style = {{marginTop:'30px'}}></img>
 
                         <div className="info_content">
                             <div className="info_content_title">
